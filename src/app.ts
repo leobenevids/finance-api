@@ -1,11 +1,9 @@
-import express from "express";
+import express from 'express'
+import userRoutes from './routes/user.routes'
 
-const app = express();
+const app = express()
 
-app.use(express.json());
+app.use(express.json())
+app.use('/users', userRoutes)
 
-app.get("/", (req, res) => {
-  res.send("API Finance funcionando ✅");
-});
-
-export default app;
+export default app

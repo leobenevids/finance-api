@@ -17,3 +17,20 @@ export async function listUserExpenses(userId: string) {
     orderBy: { date: "desc" },
   });
 }
+
+export async function updateExpense(
+  id: string,
+  userId: string,
+  data: Partial<{ title: string; amount: number; date: Date }>
+) {
+  return prisma.expense.updateMany({
+    where: { id, userId },
+    data,
+  });
+}
+
+export async function deleteExpense(id: string, userId: string) {
+  return prisma.expense.deleteMany({
+    where: { id, userId },
+  });
+}

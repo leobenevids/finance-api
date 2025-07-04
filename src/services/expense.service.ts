@@ -12,3 +12,15 @@ export function createExpense(
 export function listExpenses(userId: string) {
   return expenseRepo.listUserExpenses(userId);
 }
+
+export function updateExpense(
+  id: string,
+  userId: string,
+  data: { title?: string; amount?: number; date?: Date }
+) {
+  return expenseRepo.updateExpense(id, userId, data);
+}
+
+export function deleteExpense(id: string, userId: string) {
+  return expenseRepo.deleteExpense(id, userId);
+}

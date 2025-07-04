@@ -31,3 +31,46 @@ export async function listExpensesController(req: Request, res: Response) {
   const expenses = await expenseService.listExpenses(userId);
   res.json(expenses);
 }
+
+export async function updateExpenseController(req: Request, res: Response) {
+  const userId = (req.user as any).sub;
+  const { id } = req.params;
+  const { title, amount, date } = req.body;
+
+  try {
+    const result = await expenseService.updateExpense(id, userId, {
+      title,
+      amount,
+      date,
+    });
+
+    if (result.count === 0) {
+      return res
+        .status(404)
+        .json({ error: "Gasto não encontrado ou não pertence ao usuário" });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao atualizar gasto" });
+  }
+}
+
+export async function deleteExpenseController(req: Request, res: Response) {
+  const userId = (req.user as any).sub;
+  const { id } = req.params;
+
+  try {
+    const result = await expenseService.deleteExpense(id, userId);
+
+    if (result.count === 0) {
+      return res
+        .status(404)
+        .json({ error: "Gasto não encontrado ou não pertence ao usuário" });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao deletar gasto" });
+  }
+}

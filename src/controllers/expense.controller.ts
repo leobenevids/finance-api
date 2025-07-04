@@ -1,17 +1,29 @@
 import { Request, Response } from "express";
 import * as expenseService from "../services/expense.service";
+import { createExpenseSchema } from "schemas/expense.schema";
 
 export async function createExpenseController(req: Request, res: Response) {
-  const { title, amount, date } = req.body;
-  const userId = (req.user as any).sub;
+  try {
+    const result = createExpenseSchema.safeParse(req.body);
 
-  const expense = await expenseService.createExpense(
-    title,
-    amount,
-    userId,
-    date
-  );
-  res.status(201).json(expense);
+    if (!result.success) {
+      const errors = result.error.errors.map((err) => err.message);
+      return res.status(400).json({ errors });
+    }
+
+    const { title, amount, date } = result.data;
+    const userId = (req.user as any).sub;
+
+    const expense = await expenseService.createExpense(
+      title,
+      amount,
+      userId,
+      date
+    );
+    res.status(201).json(expense);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao criar gasto" });
+  }
 }
 
 export async function listExpensesController(req: Request, res: Response) {
